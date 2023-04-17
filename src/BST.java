@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 /**
  * An Integer Binary Search Tree
- * @author: Your Name Here
- * @version: Date
+ * @author: Eric Feng
+ * @version: 4/17
  */
 
 public class BST {
@@ -47,32 +47,97 @@ public class BST {
      * @return true if val is in the tree, false otherwise
      */
     public boolean search(int val) {
-        // TODO: Complete the search function
-        return false;
+        //Runs helper starting at root
+        return SearchHelper(val, root);
+    }
+    //Helper function
+    public boolean SearchHelper(int val, BSTNode node) {
+        //Returns true if the value is at this node
+        if(node.getVal() == val)
+        {
+            return true;
+        }
+        //Returns false is reached end without finding value
+        if(node.getLeft() == null && node.getRight() == null ){
+            return false;
+        }
+        //If value is less than node value, it is known that the value has to be to the left
+        if (val < node.getVal())
+        {
+            return SearchHelper(val, node.getLeft());
+        }
+        //Otherwise the value has to be to the right (not left or equal)
+        return SearchHelper(val, node.getRight());
     }
 
     /**
      * @return ArrayList of BSTNodes in inorder
      */
     public ArrayList<BSTNode> getInorder() {
-        // TODO: Complete inorder traversal
-        return null;
+        //Makes arraylist to return and passes root and list into helper
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        return getInorderHelper(root,list);
     }
+
+    //Helper function, looks left, node, right
+    public ArrayList<BSTNode> getInorderHelper(BSTNode n, ArrayList<BSTNode> list) {
+        //Recursively looks at left if exists
+        if (n.getLeft() != null)
+        {
+            getInorderHelper(n.getLeft(),list);
+        }
+        //Once no more left in this line, adds this to list (also means it adds at leaf)
+        list.add(n);
+        //Then goes through all the right sides and repeats
+        if (n.getRight() != null)
+        {
+            getInorderHelper(n.getRight(),list);
+        }
+        //Returns edited list
+        return list;
+    }
+
 
     /**
      * @return ArrayList of BSTNodes in preorder
      */
+    //Same thing as inorder, but it adds the node first, then looks left then right
     public ArrayList<BSTNode> getPreorder() {
-        // TODO: Complete preorder traversal
-        return null;
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        return getPreorderHelper(root,list);
     }
+    public ArrayList<BSTNode> getPreorderHelper(BSTNode n, ArrayList<BSTNode> list) {
+        list.add(n);
+        if (n.getLeft() != null)
+        {
+            getPreorderHelper(n.getLeft(),list);
+        }
+        if (n.getRight() != null)
+        {
+            getPreorderHelper(n.getRight(),list);
+        }
+        return list;
+    }
+
 
     /**
      * @return ArrayList of BSTNodes in postorder
      */
+    //Same thing as inorder and preorder, but it looks left then right then adds the original node
     public ArrayList<BSTNode> getPostorder() {
-        // TODO: Complete postorder traversal
-        return null;
+        ArrayList<BSTNode> list = new ArrayList<BSTNode>();
+        return getPostorderHelper(root,list);
+    }
+    public ArrayList<BSTNode> getPostorderHelper(BSTNode n, ArrayList<BSTNode> list) {
+        if (n.getLeft() != null) {
+            getPostorderHelper(n.getLeft(), list);
+        }
+        if (n.getRight() != null)
+        {
+            getPostorderHelper(n.getRight(),list);
+        }
+        list.add(n);
+        return list;
     }
 
     /**
@@ -81,8 +146,33 @@ public class BST {
      * root instance variable to be the root of the new modified tree.
      * @param val The value ot insert
      */
+    //Just runs helper with root
     public void insert(int val) {
-        // TODO: Complete insert
+        insertHelper(val, root);
+    }
+    //Similar to the search function:
+    //The tree is sorted, so if the val is greater than the current node,
+    //Looks right if possible, if not possible, then adds right and exits
+    //Same things for the left side
+    public void insertHelper(int val, BSTNode node) {
+        if (val > node.getVal())
+        {
+            if (node.getRight() == null)
+            {
+                node.setRight(new BSTNode(val));
+                return;
+            }
+            insertHelper(val, node.getRight());
+        }
+        else if (val < node.getVal())
+        {
+            if (node.getLeft() == null)
+            {
+                node.setLeft(new BSTNode(val));
+                return;
+            }
+            insertHelper(val, node.getLeft());
+        }
     }
 
     /**
